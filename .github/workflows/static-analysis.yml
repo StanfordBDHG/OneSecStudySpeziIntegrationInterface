@@ -29,9 +29,9 @@ jobs:
   markdown_link_check:
     name: Markdown Link Check
     uses: StanfordBDHG/.github/.github/workflows/markdown-link-check.yml@v2
-  breaking_changes:
-    name: Diagnose Breaking Changes
-    uses: StanfordBDHG/.github/.github/workflows/breaking-changes.yml@v2
-    if: ${{ github.ref_name != 'main' }}
-    with:
-      runsonlabels: '["macOS", "self-hosted"]'
+  # breaking_changes: # disabled bc this is an iOS-only package and the breaking-changes action (currently) only supports macOS
+  #   name: Diagnose Breaking Changes
+  #   uses: StanfordBDHG/.github/.github/workflows/breaking-changes.yml@v2
+  #   if: ${{ github.ref_name != 'main' }}
+  #   with:
+  #     runsonlabels: '["macOS", "self-hosted"]'
