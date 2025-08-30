@@ -1,5 +1,5 @@
 //
-// This source file is part of the TemplatePackage open-source project
+// This source file is part of the OneSecStudySpeziIntegration open-source project
 //
 // SPDX-FileCopyrightText: 2022 Stanford University and the project authors (see CONTRIBUTORS.md)
 //
@@ -7,15 +7,14 @@
 //
 
 import SwiftUI
-import TemplatePackage
+import OneSecStudySpeziIntegrationInterface
 
 
 @main
 struct UITestsApp: App {
     var body: some Scene {
         WindowGroup {
-            Text(TemplatePackage().stanford)
-            Text(operatingSystem)
+            Text("Hello there")
         }
     }
 }

@@ -1,7 +1,7 @@
 <!--
                   
 #
-# This source file is part of the TemplatePackage open source project
+# This source file is part of the OneSecStudySpeziIntegration open source project
 #
 # SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see CONTRIBUTORS.md)
 #
