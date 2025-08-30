@@ -19,6 +19,18 @@ SPDX-License-Identifier: MIT
 Interface package for the [SpeziOneSecIntegration](https://github.com/StanfordBDHG/OneSecStudySpeziIntegration) package.
 
 
+## Usage
+
+Use this package to interface with the [SpeziOneSecIntegration](https://github.com/StanfordBDHG/OneSecStudySpeziIntegration) package in pre-iOS 17 deployment targets.
+It acts as a Spezi-independent wrapper around the SpeziOneSecIntegration module (which contains the actual implementation), working around the issue that a Swift package with a deployment target Y cannot be imported into an Xcode project with a deployment target X < Y.
+
+1. In your AppDelegate's `willFinishLaunching` function: call `SpeziOneSecInterface.initialize(_:launchOptions:healthExportConfig:)`
+    If the device is running iOS 17 or newer, this function will dynamically load the SpeziOneSecIntegration package into the current process, and initialize and set up Spezi.
+    If the device is running an iOS version older than iOS 17, the function will simply do nothing
+2. Apply the `.spezi()` view modifier to the root of your SwiftUI view hierarchy (ideally directly in your `App`).
+3. You now can, in SwiftUI views that have an availabilty of iOS 17+, use `@Environment(SpeziOneSecModule.self)` to access the SpeziOneSecIntegration package's implementation. See that package for more info.
+
+
 ## License
 This project is licensed under the MIT License. See [Licenses](https://github.com/StanfordBDHG/OneSecStudySpeziIntegrationInterface/tree/main/LICENSES) for more information.
 
