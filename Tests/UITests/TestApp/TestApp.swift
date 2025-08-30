@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: MIT
 //
 
-import OneSecStudySpeziIntegrationInterface
+import SpeziOneSecInterface
 import SwiftUI
 
 
