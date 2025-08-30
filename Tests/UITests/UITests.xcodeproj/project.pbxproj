@@ -967,11 +967,11 @@
 /* Begin XCSwiftPackageProductDependency section */
 		2F68C3C7292EA52000B3E12C /* OneSecStudySpeziIntegrationInterface */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OneSecStudySpeziIntegrationInterface;
+			productName = SpeziOneSecIntegrationInterface;
 		};
 		2F9CBED92A76C795009818FF /* OneSecStudySpeziIntegrationInterface */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OneSecStudySpeziIntegrationInterface;
+			productName = SpeziOneSecIntegrationInterface;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
