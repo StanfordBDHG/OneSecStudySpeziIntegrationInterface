@@ -16,10 +16,32 @@ SPDX-License-Identifier: MIT
 <!-- [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FStanfordBDHG%2FOneSecStudySpeziIntegrationInterface%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/StanfordBDHG/OneSecStudySpeziIntegrationInterface)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FStanfordBDHG%2FOneSecStudySpeziIntegrationInterface%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/StanfordBDHG/OneSecStudySpeziIntegrationInterface) -->
 
-Interface package for the [SpeziOneSecIntegration](https://github.com/StanfordBDHG/OneSecStudySpeziIntegration) package.
+Interface for the [SpeziOneSecIntegration](https://github.com/StanfordBDHG/OneSecStudySpeziIntegration) package.
 
 
-## Usage
+## Overview
+
+This Swift package implements the interface of the Stanford Spezi integration for the one sec app's Digital Interventions Outcome study.
+
+
+### Project Structure
+
+In order to support an overall deployment target of iOS 15, this project needs to be split up into 2 separate Swift packages:
+- [SpeziOneSecIntegrationInterface](https://github.com/StanfordBDHG/SpeziOneSecIntegrationInterface) (this package)
+    - package deployment target: iOS 15
+    - defines the interface of the integration
+    - the app defines a dependency on this package, and adds it to its "link binary with libraries" build phase in Xcode
+    - on launch, the app calls this package's `initialize` function, which, if possible, will dynamically
+- [SpeziOneSecIntegration](https://github.com/StanfordBDHG/SpeziOneSecIntegration)
+    - package deployment target: iOS 17
+    - implements the interface defined in SpeziOneSecIntegrationInterface
+    - the app defines a dependency on this package, but does not add it to its "link binary with libraries" build phase
+    - instead, the app should add the "SpeziOneSec" target to its "target dependencies" and its "embed frameworks" build phases
+    - this ensures that the package won't get linked automatically, which would crash on pre-iOS 17 devices
+    - the app never directly imports this package; instead, all interactions with it go through the interface package
+
+
+### Usage
 
 Use this package to interface with the [SpeziOneSecIntegration](https://github.com/StanfordBDHG/OneSecStudySpeziIntegration) package in pre-iOS 17 deployment targets.
 It acts as a Spezi-independent wrapper around the SpeziOneSecIntegration module (which contains the actual implementation), working around the issue that a Swift package with a deployment target Y cannot be imported into an Xcode project with a deployment target X < Y.
