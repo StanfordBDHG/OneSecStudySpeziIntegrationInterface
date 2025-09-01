@@ -20,7 +20,6 @@ public import UIKit
 /// ### Instance Properties
 /// - ``state``
 /// - ``surveyUrl``
-/// - ``didStartHealthExport``
 ///
 /// ### Instance Methods
 /// - ``makeSpeziOneSecSheet()``
@@ -52,12 +51,6 @@ open class SpeziOneSecModule: NSObject, Sendable {
     /// This URL should be constructed by the app, based on the survey and the token obtained from REDCap.
     public var surveyUrl: URL?
     
-    /// Callback that will be invoked by SpeziOneSec when starting a health export.
-    ///
-    /// - parameter exportedFiles: An `AsyncSequence` that will yield the `URL`s of the individual export batch files.
-    ///     Note that this parameter's `Failure` type will likely be changed to `Never` in a future release.
-    public var didStartHealthExport: (@MainActor @Sendable (_ exportedFiles: AnyAsyncSequence<URL, any Error>) -> Void)?
-    
     /// The current state of the integration.
     public private(set) var state: State = .unavailable
     
@@ -85,14 +78,31 @@ open class SpeziOneSecModule: NSObject, Sendable {
 
 
 public struct HealthExportConfiguration: Hashable, Sendable {
-    public let destination: URL
-    public let sampleTypes: Set<HKObjectType>
-    public let timeRange: Range<Date>
+    /// Callback that lets the app know that a health export was started.
+    ///
+    /// - parameter files: An `AsyncSequence` that will yield the `URL`s of the local files created from the individual export batches.
+    ///     Note that this sequence is in practice non-throwing, and its `Failure` type will likely be changed to `Never` in a future release.
+    public typealias DidStartExport = @MainActor (_ files: AnyAsyncSequence<URL, any Error>) -> Void
     
-    /// - parameter destination: Directory to which the Health export files should be written.
-    public init(destination: URL, sampleTypes: Set<HKObjectType>, timeRange: Range<Date>) {
+    /// Directory to which the Health export files should be written.
+    public let destination: URL
+    /// The sample types that should be included in the export.
+    public let sampleTypes: Set<HKObjectType>
+    /// The time range for which health samples should be exported.
+    public let timeRange: Range<Date>
+    /// Callback that will be invoked when a health export is started.
+    public let didStartExport: DidStartExport
+    
+    /// Create a new Health Export Configuration.
+    public init(
+        destination: URL,
+        sampleTypes: Set<HKObjectType>,
+        timeRange: Range<Date>,
+        didStartExport: @escaping DidStartExport
+    ) {
         self.destination = destination
         self.sampleTypes = sampleTypes
         self.timeRange = timeRange
+        self.didStartExport = didStartExport
     }
 }
