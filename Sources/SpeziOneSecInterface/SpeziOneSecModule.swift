@@ -41,10 +41,15 @@ open class SpeziOneSecModule: NSObject, Sendable {
     /// This URL should be constructed by the app, based on the survey and the token obtained from REDCap.
     public var surveyUrl: URL?
     
+    public var healthExportFiles: AsyncStream<URL> {
+        fatalError("implemented in SpeziOneSec")
+    }
+    
     public private(set) var state: State = .unavailable
     
     override public nonisolated init() {}
     
+    @_spi(APISupport)
     open class func initialize(
         application: UIApplication,
         launchOptions: [UIApplication.LaunchOptionsKey: Any]?, // swiftlint:disable:this discouraged_optional_collection
