@@ -77,12 +77,12 @@ open class SpeziOneSecModule: NSObject, Sendable {
 }
 
 
-public struct HealthExportConfiguration: Hashable, Sendable {
+public struct HealthExportConfiguration: Sendable {
     /// Callback that lets the app know that a health export was started.
     ///
     /// - parameter files: An `AsyncSequence` that will yield the `URL`s of the local files created from the individual export batches.
     ///     Note that this sequence is in practice non-throwing, and its `Failure` type will likely be changed to `Never` in a future release.
-    public typealias DidStartExport = @MainActor (_ files: AnyAsyncSequence<URL, any Error>) -> Void
+    public typealias DidStartExport = @Sendable @MainActor (_ files: AnyAsyncSequence<URL, any Error>) -> Void
     
     /// Directory to which the Health export files should be written.
     public let destination: URL
