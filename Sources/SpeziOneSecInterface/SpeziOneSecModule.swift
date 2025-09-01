@@ -13,6 +13,17 @@ public import SwiftUI
 public import UIKit
 
 
+/// The Spezi integration for the one sec app.
+///
+/// ## Topics
+///
+/// ### Instance Properties
+/// - ``state``
+/// - ``surveyUrl``
+/// - ``didStartHealthExport``
+///
+/// ### Instance Methods
+/// - ``makeSpeziOneSecSheet()``
 @available(iOS 17, *)
 @Observable
 @MainActor
@@ -41,12 +52,15 @@ open class SpeziOneSecModule: NSObject, Sendable {
     /// This URL should be constructed by the app, based on the survey and the token obtained from REDCap.
     public var surveyUrl: URL?
     
-    public var healthExportFiles: AsyncStream<URL> {
-        fatalError("implemented in SpeziOneSec")
-    }
+    /// Callback that will be invoked by SpeziOneSec when starting a health export.
+    ///
+    /// - parameter exportedFiles: An `AsyncStream` that will yield the `URL`s of the individual export batch files.
+    public var didStartHealthExport: (@MainActor @Sendable (_ exportedFiles: AsyncStream<URL>) -> Void)?
     
+    /// The current state of the integration.
     public private(set) var state: State = .unavailable
     
+    @_documentation(visibility: internal)
     override public nonisolated init() {}
     
     @_spi(APISupport)
