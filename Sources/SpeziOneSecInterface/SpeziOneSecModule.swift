@@ -54,8 +54,9 @@ open class SpeziOneSecModule: NSObject, Sendable {
     
     /// Callback that will be invoked by SpeziOneSec when starting a health export.
     ///
-    /// - parameter exportedFiles: An `AsyncStream` that will yield the `URL`s of the individual export batch files.
-    public var didStartHealthExport: (@MainActor @Sendable (_ exportedFiles: AnyAsyncSequence<URL, Never>) -> Void)?
+    /// - parameter exportedFiles: An `AsyncSequence` that will yield the `URL`s of the individual export batch files.
+    ///     Note that this parameter's `Failure` type will likely be changed to `Never` in a future release.
+    public var didStartHealthExport: (@MainActor @Sendable (_ exportedFiles: AnyAsyncSequence<URL, any Error>) -> Void)?
     
     /// The current state of the integration.
     public private(set) var state: State = .unavailable
