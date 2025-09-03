@@ -27,12 +27,12 @@ This Swift package implements the interface of the Stanford Spezi integration fo
 ### Project Structure
 
 In order to support an overall deployment target of iOS 15, this project needs to be split up into 2 separate Swift packages:
-- [SpeziOneSecIntegrationInterface](https://github.com/StanfordBDHG/SpeziOneSecIntegrationInterface) (this package)
+- [SpeziOneSecIntegrationInterface](https://github.com/StanfordBDHG/OneSecStudySpeziIntegrationInterface) (this package)
     - package deployment target: iOS 15
     - defines the interface of the integration
     - the app defines a dependency on this package, and adds it to its "link binary with libraries" build phase in Xcode
     - on launch, the app calls this package's `initialize` function, which, if possible, will dynamically
-- [SpeziOneSecIntegration](https://github.com/StanfordBDHG/SpeziOneSecIntegration)
+- [SpeziOneSecIntegration](https://github.com/StanfordBDHG/OneSecStudySpeziIntegration)
     - package deployment target: iOS 17
     - implements the interface defined in SpeziOneSecIntegrationInterface
     - the app defines a dependency on this package, but does not add it to its "link binary with libraries" build phase
@@ -53,13 +53,13 @@ It acts as a Spezi-independent wrapper around the SpeziOneSecIntegration module 
 3. You now can, in SwiftUI views that have an availabilty of iOS 17+, use `@Environment(SpeziOneSecModule.self)` to access the SpeziOneSecIntegration package's implementation. See that package for more info.
 
 
+## Contributing
+
+Contributions to this project are welcome. Please make sure to read the [contribution guidelines](https://github.com/StanfordBDHG/.github/blob/main/CONTRIBUTING.md) and the [contributor covenant code of conduct](https://github.com/StanfordBDHG/.github/blob/main/CODE_OF_CONDUCT.md) first.
+
+
 ## License
 This project is licensed under the MIT License. See [Licenses](https://github.com/StanfordBDHG/OneSecStudySpeziIntegrationInterface/tree/main/LICENSES) for more information.
 
-
-## Contributors
-This project is developed as part of the Stanford Byers Center for Biodesign at Stanford University.
-See [CONTRIBUTORS.md](https://github.com/StanfordBDHG/OneSecStudySpeziIntegrationInterface/tree/main/CONTRIBUTORS.md) for a full list of all contributors.
-
-![Stanford Byers Center for Biodesign Logo](https://raw.githubusercontent.com/StanfordBDHG/.github/main/assets/biodesign-footer-light.png#gh-light-mode-only)
-![Stanford Byers Center for Biodesign Logo](https://raw.githubusercontent.com/StanfordBDHG/.github/main/assets/biodesign-footer-dark.png#gh-dark-mode-only)
+![Spezi Footer](https://raw.githubusercontent.com/StanfordSpezi/.github/main/assets/FooterLight.png#gh-light-mode-only)
+![Spezi Footer](https://raw.githubusercontent.com/StanfordSpezi/.github/main/assets/FooterDark.png#gh-dark-mode-only)
