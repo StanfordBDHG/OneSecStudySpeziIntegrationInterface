@@ -6,40 +6,16 @@
 // SPDX-License-Identifier: MIT
 //
 
-
-//public struct AsyncIteratorSequence<Base: AsyncIteratorProtocol>: AsyncIteratorProtocol, AsyncSequence {
-//    public typealias Element = Base.Element
-//    @available(iOS 18.0, *)
-//    public typealias Failure = Base.Failure
-//    
-//    @usableFromInline var base: Base
-//    
-//    @inlinable
-//    public init(_ base: Base) {
-//        self.base = base
-//    }
-//    
-//    @inlinable
-//    public func makeAsyncIterator() -> Self {
-//        self
-//    }
-//    
-//    @inlinable
-//    public mutating func next() async throws -> Element? {
-//        try await base.next()
-//    }
-//    
-//    @available(iOS 18.0, *)
-//    @inlinable
-//    public mutating func next(isolation actor: isolated (any Actor)?) async throws(Base.Failure) -> Base.Element? {
-//        try await base.next(isolation: actor)
-//    }
-//}
+// swiftlint:disable file_types_order
 
 
+// MARK: AnyAsyncSequence
+
+/// A type-erased wrapper over an `AsyncSequence`.
 public struct AnyAsyncSequence<Element, Failure: Error>: AsyncSequence {
     @usableFromInline let makeIterator: () -> AnyAsyncIterator<Element, Failure>
     
+    /// Creates an `AnyAsyncSequence` that wraps the given `AsyncSequence`
     @available(iOS 18.0, *)
     @inlinable
     public init(_ base: some AsyncSequence<Element, Failure>) {
@@ -48,11 +24,25 @@ public struct AnyAsyncSequence<Element, Failure: Error>: AsyncSequence {
         }
     }
     
+    /// Creates an `AnyAsyncSequence` that wraps the given `AsyncSequence`
     @_disfavoredOverload
     @inlinable
     public init<S: AsyncSequence>(_ base: S) where S.Element == Element, Failure == any Error {
         makeIterator = {
             AnyAsyncIterator(base.makeAsyncIterator())
+        }
+    }
+    
+    /// Creates an `AnyAsyncSequence` that wraps the given `AsyncSequence` and assumes it will never throw.
+    ///
+    /// This initializer will forcibly coerce the input sequence into one of a type whose `Failure` is `Never`.
+    /// If the sequence does in fact end up throwing an error, that is a programmer error and will result in the program getting terminated.
+    ///
+    /// Use this initializer in pre-iOS 18 situations, where `AsyncSequence`'s `Failure` type isn't yet available.
+    @inlinable
+    public init<S: AsyncSequence>(unsafelyAssumingDoesntThrow base: S) where S.Element == Element, Failure == Never {
+        makeIterator = {
+            AnyAsyncIterator(unsafelyAssumingDoesntThrow: base.makeAsyncIterator())
         }
     }
     
@@ -63,62 +53,50 @@ public struct AnyAsyncSequence<Element, Failure: Error>: AsyncSequence {
 }
 
 
+// MARK: AnyAsyncIterator
 
+/// A type-erased async iterator.
 public struct AnyAsyncIterator<Element, Failure: Error>: AsyncIteratorProtocol {
     @usableFromInline var base: any AsyncIteratorProtocol
     
-    @_disfavoredOverload
-    @inlinable
-    public init<I: AsyncIteratorProtocol>(_ base: I) where I.Element == Element, Failure == any Error {
-        self.base = base
-    }
-    
+    /// Creates an async iterator that wraps a base iterator but whose type depends only on the base iterator's `Element` and `Failure` types.
     @available(iOS 18, *)
     @inlinable
     public init(_ base: some AsyncIteratorProtocol<Element, Failure>) {
         self.base = base
     }
     
+    /// Creates an async iterator that wraps a base iterator but whose type depends only on the base iterator's `Element` type.
+    @_disfavoredOverload
     @inlinable
-    mutating public func next() async throws -> Element? {
+    public init<I: AsyncIteratorProtocol>(_ base: I) where I.Element == Element, Failure == any Error {
+        self.base = base
+    }
+    
+    /// Creates an async iterator that wraps a base iterator but whose type depends only on the base iterator's `Element` type, and assumes it will never throw.
+    ///
+    /// This initializer will forcibly coerce the input sequence into one of a type whose `Failure` is `Never`.
+    /// If the sequence does in fact end up throwing an error, that is a programmer error and will result in the program getting terminated.
+    ///
+    /// Use this initializer in pre-iOS 18 situations, where `AsyncSequence`'s `Failure` type isn't yet available.
+    @inlinable
+    public init<I: AsyncIteratorProtocol>(unsafelyAssumingDoesntThrow base: I) where I.Element == Element, Failure == Never {
+        self.base = base
+    }
+    
+    @inlinable
+    public mutating func next() async throws -> Element? {
         try await base.next() as? Element
     }
     
     @available(iOS 18.0, *)
     @inlinable
-    mutating public func next(isolation actor: isolated (any Actor)?) async throws(Failure) -> Element? {
+    public mutating func next(isolation actor: isolated (any Actor)?) async throws(Failure) -> Element? {
         do {
             return try await base.next(isolation: actor) as? Element
         } catch {
-            throw error as! Failure
+            // SAFETY: our initializers only allow creating `AnyAsyncIterator`s with a matching `Failure` type
+            throw error as! Failure // swiftlint:disable:this force_cast
         }
     }
 }
-
-
-//@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
-//internal struct AnyAsyncSequence<Element>: AsyncSequence {
-//    private let _makeAsyncIterator: () -> AsyncIterator
-//
-//    internal init<S: AsyncSequence>(wrapping sequence: S) where S.Element == Element {
-//        self._makeAsyncIterator = {
-//            AsyncIterator(wrapping: sequence.makeAsyncIterator())
-//        }
-//    }
-//
-//    internal func makeAsyncIterator() -> AsyncIterator {
-//        self._makeAsyncIterator()
-//    }
-//
-//    internal struct AsyncIterator: AsyncIteratorProtocol {
-//        private var iterator: any AsyncIteratorProtocol
-//
-//        init<I: AsyncIteratorProtocol>(wrapping iterator: I) where I.Element == Element {
-//            self.iterator = iterator
-//        }
-//
-//        internal mutating func next() async throws -> Element? {
-//            try await self.iterator.next() as? Element
-//        }
-//    }
-//}

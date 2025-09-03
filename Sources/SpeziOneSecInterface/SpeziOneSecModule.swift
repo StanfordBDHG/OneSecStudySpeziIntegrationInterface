@@ -82,7 +82,7 @@ public struct HealthExportConfiguration: Sendable {
     ///
     /// - parameter files: An `AsyncSequence` that will yield the `URL`s of the local files created from the individual export batches.
     ///     Note that this sequence is in practice non-throwing, and its `Failure` type will likely be changed to `Never` in a future release.
-    public typealias DidStartExport = @Sendable @MainActor (_ files: AnyAsyncSequence<URL, any Error>) -> Void
+    public typealias DidStartExport = @Sendable @MainActor (_ files: AnyAsyncSequence<URL, Never>) -> Void
     
     /// Directory to which the Health export files should be written.
     public let destination: URL
