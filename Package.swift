@@ -1,10 +1,10 @@
 // swift-tools-version:6.0
 
 //
-// This source file is part of the TemplatePackage open source project
-// 
-// SPDX-FileCopyrightText: 2022 Stanford University and the project authors (see CONTRIBUTORS.md)
-// 
+// This source file is part of the OneSecStudySpeziIntegration open source project
+//
+// SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see CONTRIBUTORS.md)
+//
 // SPDX-License-Identifier: MIT
 //
 
@@ -13,30 +13,30 @@ import PackageDescription
 
 
 let package = Package(
-    name: "TemplatePackage",
+    name: "OneSecStudySpeziIntegrationInterface",
     platforms: [
-        .iOS(.v17),
-        .watchOS(.v10),
-        .visionOS(.v1),
-        .tvOS(.v17),
-        .macOS(.v14)
+        .iOS(.v15)
     ],
     products: [
-        .library(name: "TemplatePackage", targets: ["TemplatePackage"])
+        .library(name: "SpeziOneSecInterface", type: .dynamic, targets: ["SpeziOneSecInterface"])
     ],
     dependencies: [
     ] + swiftLintPackage(),
     targets: [
         .target(
-            name: "TemplatePackage",
-            plugins: [] + swiftLintPlugin()
+            name: "SpeziOneSecInterface",
+            swiftSettings: [
+                .enableUpcomingFeature("ExistentialAny"),
+                .enableUpcomingFeature("InternalImportsByDefault")
+            ]
         ),
         .testTarget(
-            name: "TemplatePackageTests",
-            dependencies: [
-                .target(name: "TemplatePackage")
-            ],
-            plugins: [] + swiftLintPlugin()
+            name: "SpeziOneSecInterfaceTests",
+            dependencies: [.target(name: "SpeziOneSecInterface")],
+            swiftSettings: [
+                .enableUpcomingFeature("ExistentialAny"),
+                .enableUpcomingFeature("InternalImportsByDefault")
+            ]
         )
     ]
 )
