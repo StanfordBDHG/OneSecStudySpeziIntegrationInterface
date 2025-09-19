@@ -77,7 +77,7 @@ open class SpeziOneSecModule: NSObject, Sendable {
     
     /// Resets the internal state of the integration at runtime for testing purposes to `.available` (e.g. used on TestFlight).
     open func reset() {
-        state = .available
+        self.updateState(.available)
     }
 }
 
