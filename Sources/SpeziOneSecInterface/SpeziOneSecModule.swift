@@ -76,7 +76,7 @@ open class SpeziOneSecModule: NSObject, Sendable {
     }
     
     @_spi(APISupport)
-    open func triggerHealthExport() async throws {
+    open func triggerHealthExport(forceSessionReset: Bool) async throws {
         fatalError("implemented in SpeziOneSec")
     }
 }
