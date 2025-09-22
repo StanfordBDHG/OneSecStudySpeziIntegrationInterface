@@ -28,15 +28,18 @@ public import UIKit
 @MainActor
 open class SpeziOneSecModule: NSObject, Sendable {
     public enum State: Int, Hashable, Codable, Sendable {
-        /// The Spezi one sec integration is, for whatever reason, not available.
+        /// The study is not available for this user.
+        /// This may occur if the user has been deemed ineligible (e.g., underage)
+        /// based on information from a previous survey attempt or other eligibility criteria.
         case unavailable
-        /// The Spezi one sec integration is available, but hasn't yet been initiated.
+        /// The study is available but has not yet been initiated.
         case available
-        /// The Spezi one sec integration is currently being initiated.
-        case initiating
-        /// The Spezi one sec integration is currently active.
+        /// The study was started by the participant, but they indicated being underage.
+        /// The study is currently on hold until a parent or guardian provides consent.
+        case awaitingParentalConsent
+        /// The study is currently active.
         case active
-        /// The Spezi one sec integration has been completed.
+        /// The study has been completed.
         case completed
     }
     
